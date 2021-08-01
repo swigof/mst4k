@@ -173,5 +173,7 @@ async def on_message(message):
         await send(cancel(), message.channel)
     elif(command == "list"):
         await send(get_list_text(get_movies()['queued']) + poll_url, message.channel)
+    elif(command == "backlog"):
+        await send(get_list_text(get_movies()['backlog']), message.channel)
         
 client.run(os.getenv('BOT_TOKEN'))
