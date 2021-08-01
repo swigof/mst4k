@@ -30,7 +30,7 @@ def update_movies(movies):
     with open("movies.json", "w") as f:
         json.dump(movies, f, indent=4)
 
-def move_backlog():# movies move_backlog order problem
+def move_backlog():
     movies = get_movies()
     queue_length = len(movies['queued'])
     backlog_length = len(movies['backlog']) 
