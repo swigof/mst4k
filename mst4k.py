@@ -25,7 +25,7 @@ def get_movies():
             return json.load(f)
         except ValueError as e:
             return {'queued':[], 'backlog':[], 'seen':[]}
-        
+
 def update_movies(movies):
     with open("movies.json", "w") as f:
         json.dump(movies, f, indent=4)
@@ -33,17 +33,17 @@ def update_movies(movies):
 def move_backlog():
     movies = get_movies()
     queue_length = len(movies['queued'])
-    backlog_length = len(movies['backlog']) 
+    backlog_length = len(movies['backlog'])
     while(queue_length < POLL_MOVIE_COUNT and backlog_length > 0):
         movies['queued'].append(movies['backlog'][0])
         del movies['backlog'][0]
         queue_length += 1
         backlog_length -= 1
     update_movies(movies)
-    
+
 def make_poll(movie_queue):
     global poll_url
-    
+
     data = {}
     data['address'] = ""
     data['poll-1[question]'] = "films"
@@ -57,9 +57,9 @@ def make_poll(movie_queue):
     data["poll-1[ranking]"] = ""
     data['voting-limits-dropdown'] = 2
 
-    response = requests.post("https://youpoll.me", data)    
+    response = requests.post("https://youpoll.me", data)
     poll_url = response.url
-    
+
 def get_winner_loser():
     global poll_url
     response = requests.get(poll_url+"/r")
@@ -81,7 +81,7 @@ def set_seen(movie_title):
         movies['seen'].append(movies['queued'][movie_index]['title'])
         del movies['queued'][movie_index]
         update_movies(movies)
-    
+
 def yeet(movie_title):
     movies = get_movies()
     movie_index = -1
@@ -92,7 +92,7 @@ def yeet(movie_title):
         yeets = movies['queued'][movie_index]['yeets'] + 1
         if yeets < REMOVAL_YEET_COUNT:
             movies['queued'][movie_index]['yeets'] = yeets
-            movies['backlog'].append(movies['queued'][movie_index])         
+            movies['backlog'].append(movies['queued'][movie_index])
         del movies['queued'][movie_index]
         update_movies(movies)
         return yeets
@@ -119,7 +119,7 @@ def add(arguments_string):
     movies['backlog'].insert(0, {'title':arguments[0],'desc':arguments[1],'yeets': 0})
     update_movies(movies)
     return arguments[0] + " added"
-    
+
 def poll():
     global poll_url
     if poll_url != "":
@@ -130,7 +130,7 @@ def poll():
         return "no movies in queue"
     make_poll(movie_queue)
     return get_list_text(movie_queue) + poll_url
-    
+
 def tally():
     global poll_url
     if poll_url == "":
@@ -144,7 +144,7 @@ def tally():
     if yeet_count >= REMOVAL_YEET_COUNT:
         text_response += "*~!PERMAYEET!~*"
     return text_response
-    
+
 def cancel():
     global poll_url
     if poll_url == "":
@@ -155,19 +155,19 @@ def cancel():
 @client.event
 async def on_message(message):
     if message.author == client.user:
-        return   
+        return
     if not message.content.startswith(BOT_CALL_PREFIX):
         return
     if not USER_ROLE in (role.name for role in message.author.roles):
-        return           
-    
+        return
+
     content_no_prefix = message.content.removeprefix(BOT_CALL_PREFIX)
     parameters = content_no_prefix.split(" ", 1)
     command = parameters[0]
-    
+
     if(command == "add"):
         await send(add(parameters[1]), message.channel)
-    elif(command == "poll"):    
+    elif(command == "poll"):
         await send(poll(), message.channel)
     elif(command == "tally"):
         await send(tally(), message.channel)
@@ -179,5 +179,5 @@ async def on_message(message):
         await send(get_list_text(get_movies()['backlog']), message.channel)
     elif(command == "seen"):
         await send("\n".join(get_movies()['seen']), message.channel)
-        
+
 client.run(os.getenv('BOT_TOKEN'))
