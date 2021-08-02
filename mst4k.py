@@ -99,6 +99,8 @@ def yeet(movie_title):
 
 def get_list_text(movies):
     text = ""
+    if not movies:
+        return "the list is empty, also i dont like grammar"
     for movie in movies:
         text += "**" + movie['title'] + ":** " + movie['desc'] + "\n\n"
     return text
