@@ -12,22 +12,23 @@ POLL_MOVIE_COUNT = 10
 REMOVAL_YEET_COUNT = 5
 BOT_CALL_PREFIX = "mst4k "
 USER_ROLE = "director"
+MOVIES_FILE_PATH = "data/movies.json"
 
 load_dotenv()
 client = discord.Client()
 poll_url = ""
 
 def get_movies():
-    if not os.path.exists("movies.json"):
+    if not os.path.exists(MOVIES_FILE_PATH):
         return {'queued':[], 'backlog':[], 'seen':[]}
-    with open("movies.json") as f:
+    with open(MOVIES_FILE_PATH) as f:
         try:
             return json.load(f)
         except ValueError as e:
             return {'queued':[], 'backlog':[], 'seen':[]}
 
 def update_movies(movies):
-    with open("movies.json", "w") as f:
+    with open(MOVIES_FILE_PATH, "w") as f:
         json.dump(movies, f, indent=4)
 
 def move_backlog():
