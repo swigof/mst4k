@@ -100,7 +100,7 @@ def yeet(movie_title):
 def get_list_text(movies):
     text = ""
     if not movies:
-        return "The list is empty, Check the backlog."
+        return "the list is empty, also i dont like grammar"
     for movie in movies:
         text += "**" + movie['title'] + ":** " + movie['desc'] + "\n\n"
     return text
@@ -114,27 +114,27 @@ async def send(text, channel):
 def add(arguments_string):
     arguments = shlex.split(arguments_string)
     if len(arguments) != 2:
-        return "Wrong number of arguments."
+        return "wrong number of arguments"
     movies = get_movies()
     movies['backlog'].insert(0, {'title':arguments[0],'desc':arguments[1],'yeets': 0})
     update_movies(movies)
-    return arguments[0] + " added."
+    return arguments[0] + " added"
     
 def poll():
     global poll_url
     if poll_url != "":
-        return "Poll already running at " + poll_url
+        return "poll already running at " + poll_url
     move_backlog()
     movie_queue = get_movies()['queued']
     if len(movie_queue) == 0:
-        return "No movies in queue."
+        return "no movies in queue"
     make_poll(movie_queue)
     return get_list_text(movie_queue) + poll_url
     
 def tally():
     global poll_url
     if poll_url == "":
-        return "No poll to tally."
+        return "no poll to tally"
     winner, loser = get_winner_loser()
     set_seen(winner)
     yeet_count = yeet(loser)
@@ -148,9 +148,9 @@ def tally():
 def cancel():
     global poll_url
     if poll_url == "":
-        return "No poll to cancel."
+        return "no poll to cancel"
     poll_url = ""
-    return "Poll cancelled."
+    return "poll cancelled"
 
 @client.event
 async def on_message(message):
