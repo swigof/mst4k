@@ -140,7 +140,7 @@ def tally():
     yeet_count = yeet(loser)
     poll_url = ""
     text_response = "**" + winner + " wins!**\n"
-    text_response += loser + " now yeeted " + str(yeet_count) + " time(s)."
+    text_response += loser + " now yeeted " + str(yeet_count) + " time(s)"
     if yeet_count >= REMOVAL_YEET_COUNT:
         text_response += "*~!PERMAYEET!~*"
     return text_response
